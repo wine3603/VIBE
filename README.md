@@ -6,10 +6,14 @@
   <img src="https://s5.gifyu.com/images/ezgif.com-optimize6d7c4d9d7251b20a.gif" width="49%" />
 </p>
 
-Watch [this video](https://www.youtube.com/watch?v=fW0sIZfQcIs) for more qualitative results.
+Check our YouTube videos below for more details.
 
-<sub>Sources: left video - [https://www.youtube.com/watch?v=qlPRDVqYO74](https://www.youtube.com/watch?v=qlPRDVqYO74), right video - [https://www.youtube.com/watch?v=Opry3F6aB1I](https://www.youtube.com/watch?v=Opry3F6aB1I)
-</sub>
+| Paper Video                                                                                                | Qualitative Results                                                                                                |
+|------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|
+| [![PaperVideo](https://img.youtube.com/vi/rIr-nX63dUA/0.jpg)](https://www.youtube.com/watch?v=rIr-nX63dUA) | [![QualitativeResults](https://img.youtube.com/vi/fW0sIZfQcIs/0.jpg)](https://www.youtube.com/watch?v=fW0sIZfQcIs) |
+
+<!-- <sub>Sources: left video - [https://www.youtube.com/watch?v=qlPRDVqYO74](https://www.youtube.com/watch?v=qlPRDVqYO74), right video - [https://www.youtube.com/watch?v=Opry3F6aB1I](https://www.youtube.com/watch?v=Opry3F6aB1I)
+</sub> -->
 
 > [**VIBE: Video Inference for Human Body Pose and Shape Estimation**](https://arxiv.org/abs/1912.05656),            
 > [Muhammed Kocabas](https://ps.is.tuebingen.mpg.de/person/mkocabas), [Nikos Athanasiou](https://ps.is.tuebingen.mpg.de/person/nathanasiou), 
@@ -23,12 +27,13 @@ It predicts the parameters of SMPL body model for each frame of an input video. 
 
 This implementation:
 
-- is the demo code for VIBE implemented purely in PyTorch,
-- can work on arbitrary videos with multi person,
+- has the demo and training code for VIBE implemented purely in PyTorch,
+- can work on arbitrary videos with multiple people,
 - supports both CPU and GPU inference (though GPU is way faster),
 - is fast, up-to 30 FPS on a RTX2080Ti (see [this table](doc/demo.md#runtime-performance)),
 - achieves SOTA results on 3DPW and MPI-INF-3DHP datasets,
 - includes Temporal SMPLify implementation.
+- includes the training code and detailed instruction on how to train it from scratch.
 
 <p float="center">
   <img src="https://s5.gifyu.com/images/method_v2.gif" width="49%" />
@@ -45,13 +50,13 @@ Clone the repo:
 git clone https://github.com/mkocabas/VIBE.git
 ```
 
-Install the requirements using `pip` or `conda`:
+Install the requirements using `virtualenv` or `conda`:
 ```bash
 # pip
-bash install_pip.sh
+source scripts/install_pip.sh
 
 # conda
-bash install_conda.sh
+source scripts/install_conda.sh
 ```
 
 ## Running the Demo
@@ -60,10 +65,10 @@ We have prepared a nice demo code to run VIBE on arbitrary videos.
 First, you need download the required data(i.e our trained model and SMPL model parameters). To do this you can just run:
 
 ```bash
-bash prepare_data.sh
+source scripts/prepare_data.sh
 ```
 
-Then, running the demo is as simple as this:
+Then, running the demo is as simple as:
 
 ```bash
 # Run on a local video
@@ -83,10 +88,22 @@ Sample demo output with the `--sideview` flag:
 
 
 ## Google Colab
-If you do not have a suitable environment to run this projects then you could give Google Colab a try. 
-It allows you to run the project in the cloud, free of charge. You may try our Colab demo using the notebook we prepare: 
+If you do not have a suitable environment to run this project then you could give Google Colab a try. 
+It allows you to run the project in the cloud, free of charge. You may try our Colab demo using the notebook we have prepared: 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1dFfwxZ52MN86FA6uFNypMEdFShd2euQA)
 
+
+## Training
+Run the commands below to start training:
+
+```shell script
+source scripts/prepare_training_data.sh
+python train.py --cfg configs/config.yaml
+```
+
+Note that the training datasets should be downloaded and prepared before running data processing script.
+Please see [`doc/train.md`](doc/train.md) for details on how to prepare them.
+ 
 ## Evaluation
 
 Here we compare VIBE with recent state-of-the-art methods on 3D pose estimation datasets. Evaluation metric is
@@ -98,6 +115,9 @@ Procrustes Aligned Mean Per Joint Position Error (PA-MPJPE) in mm.
 | Temporal HMR   | 76.7 |     89.8     | 56.8 |
 | VIBE           | 56.5 |     **63.4**     | 41.5 |
 | VIBE + 3DPW    | **51.9** |     64.6     | 41.4 |
+
+See [`doc/eval.md`](doc/eval.md) to reproduce the results in this table or 
+evaluate a pretrained model.
 
 ## Citation
 
